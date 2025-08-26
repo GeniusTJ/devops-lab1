@@ -1,17 +1,25 @@
-// index.js
-const http = require('http');
+const express = require('express')
+const dotenv = require('dotenv')
+const cors = require('cors')
 
-const PORT = process.env.PORT || 3000;
+const app = express()
+dotenv.config() //To access the variables in .env
 
-const server = http.createServer((req, res) => {
-  if (req.url === '/health') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    return res.end(JSON.stringify({ status: 'ok' }));
-  }
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end('Hello from DevOps Lab 1!\n');
-});
+const corsOptions = { //to alllow traffic for crud operations
+  origin: ["http://localhost:5173","http://localhost:5174"],
+  credentials: true,
+  optionSuccessStatus: 200,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  allowedHeaders:
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+};
 
-server.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+app.use(cors(corsOptions));
+
+dotenv.config();
+
+app.use(express.json())
+const todoroute = require('./routes/todo')
+app.use("/api/todo",todoroute)
+const PORT = process.env.PORT || 8000;
+app.listen(PORT,()=>{console.log(`Server is Running on ${PORT}`)})
