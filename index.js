@@ -1,6 +1,7 @@
 const express = require('express')
 const dotenv = require('dotenv')
 const cors = require('cors')
+const db = require("./db/db")
 
 const app = express()
 dotenv.config() //To access the variables in .env
