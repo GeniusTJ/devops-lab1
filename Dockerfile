@@ -1,18 +1,34 @@
 # Use Node.js official image
 FROM node:22
 
-# Create app directory inside container
+# App directory
 WORKDIR /app
 
-# Copy package.json first and install dependencies
+# Install deps first (better layer caching)
 COPY package*.json ./
 RUN npm install
 
-# Copy the rest of the app
+# ---- Build-time args (populated by GitHub Actions) ----
+ARG PORT=8000
+ARG DB_HOST
+ARG DB_USER
+ARG DB_PASS
+ARG DB_NAME
+ARG NODE_ENV=development
+
+# Make them available to the app at runtime (this bakes them into the image)
+ENV PORT=${PORT} \
+    DB_HOST=${DB_HOST} \
+    DB_USER=${DB_USER} \
+    DB_PASS=${DB_PASS} \
+    DB_NAME=${DB_NAME} \
+    NODE_ENV=${NODE_ENV}
+
+# Copy source
 COPY . .
 
-# App will listen on port 3000
-EXPOSE 3000
+# Document the port (EXPOSE is informational)
+EXPOSE 8000
 
-# Run the app
+# Start the app
 CMD ["npm", "start"]
