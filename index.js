@@ -18,8 +18,15 @@ app.use(cors(corsOptions));
 
 dotenv.config();
 
+
+
 app.use(express.json())
+
+app.get("/", (req, res) => {
+  res.json("Welcome to our application.");
+});
+
 const todoroute = require('./routes/todo')
 app.use("/api/todo",todoroute)
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT,()=>{console.log(`Server is Running on ${PORT}`)})
